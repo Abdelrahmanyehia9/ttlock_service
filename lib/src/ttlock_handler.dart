@@ -1,31 +1,30 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:ttlock_flutter/ttlock.dart';
+import 'package:ttlock_upgrade_flutter/ttlock_upgrade.dart' hide TTSuccessCallback;
 
 import 'models/lock_controll_result.dart';
 import 'models/ttlock_exception.dart';
 import 'models/wifi_scan_result.dart';
 
-
-
-
-
 class TTLockService {
+  TTLockService._();
 
-
-   TTLockService._();
   static final TTLockService _instance = TTLockService._();
+
   factory TTLockService() => _instance;
+
   static TTLockService get instance => _instance;
   String? _lockData;
   String? _lockMac;
 
   String? get lockData => _lockData;
+
   String? get lockMac => _lockMac;
+
   bool get isInitialized => _lockData != null;
 
   Stream<TTLockScanModel> scanForLocks() {
-
     final controller = StreamController<TTLockScanModel>();
     TTLock.startScanLock((scanModel) {
       _lockMac = scanModel.lockMac;
@@ -50,14 +49,13 @@ class TTLockService {
 
     TTLock.initLock(
       initData,
-          (lockData) {
+      (lockData) {
         _lockData = lockData;
         _lockMac = lockMac;
         completer.complete(lockData);
       },
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -83,10 +81,9 @@ class TTLockService {
       startTime,
       endTime,
       _lockData!,
-          () => completer.complete(passcode),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      () => completer.complete(passcode),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -106,10 +103,9 @@ class TTLockService {
       startDate.millisecondsSinceEpoch,
       endDate.millisecondsSinceEpoch,
       _lockData!,
-          () => completer.complete(passcode),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      () => completer.complete(passcode),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -128,10 +124,9 @@ class TTLockService {
       startDate.millisecondsSinceEpoch,
       endDate.millisecondsSinceEpoch,
       _lockData!,
-          () => completer.complete(),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      () => completer.complete(),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -144,10 +139,9 @@ class TTLockService {
     TTLock.deletePasscode(
       passcode,
       _lockData!,
-          () => completer.complete(),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      () => completer.complete(),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -168,10 +162,9 @@ class TTLockService {
       startDate.millisecondsSinceEpoch,
       endDate.millisecondsSinceEpoch,
       _lockData!,
-          () => completer.complete(),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      () => completer.complete(),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -183,13 +176,12 @@ class TTLockService {
 
     TTLock.resetPasscode(
       _lockData!,
-          (newLockData) {
+      (newLockData) {
         _lockData = newLockData;
         completer.complete(newLockData);
       },
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -201,10 +193,9 @@ class TTLockService {
 
     TTLock.getAllValidPasscode(
       _lockData!,
-          (passcodeList) => completer.complete(passcodeList),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (passcodeList) => completer.complete(passcodeList),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -216,10 +207,9 @@ class TTLockService {
 
     TTLock.getAdminPasscode(
       _lockData!,
-          (adminPasscode) => completer.complete(adminPasscode),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (adminPasscode) => completer.complete(adminPasscode),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -232,10 +222,9 @@ class TTLockService {
     TTLock.modifyAdminPasscode(
       newPasscode,
       _lockData!,
-          () => completer.complete(),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      () => completer.complete(),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -248,18 +237,19 @@ class TTLockService {
     TTLock.controlLock(
       _lockData!,
       TTControlAction.unlock,
-          (lockTime, battery, uniqueId, lockData) {
+      (lockTime, battery, uniqueId, lockData) {
         _lockData = lockData;
-        completer.complete(LockControlResult(
-          lockTime: lockTime,
-          batteryLevel: battery,
-          uniqueId: uniqueId,
-          lockData: lockData,
-        ));
+        completer.complete(
+          LockControlResult(
+            lockTime: lockTime,
+            batteryLevel: battery,
+            uniqueId: uniqueId,
+            lockData: lockData,
+          ),
+        );
       },
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -272,18 +262,19 @@ class TTLockService {
     TTLock.controlLock(
       _lockData!,
       TTControlAction.lock,
-          (lockTime, battery, uniqueId, lockData) {
+      (lockTime, battery, uniqueId, lockData) {
         _lockData = lockData;
-        completer.complete(LockControlResult(
-          lockTime: lockTime,
-          batteryLevel: battery,
-          uniqueId: uniqueId,
-          lockData: lockData,
-        ));
+        completer.complete(
+          LockControlResult(
+            lockTime: lockTime,
+            batteryLevel: battery,
+            uniqueId: uniqueId,
+            lockData: lockData,
+          ),
+        );
       },
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -295,10 +286,9 @@ class TTLockService {
 
     TTLock.getLockSwitchState(
       _lockData!,
-          (state) => completer.complete(state),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (state) => completer.complete(state),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -310,10 +300,9 @@ class TTLockService {
 
     TTLock.getLockPower(
       _lockData!,
-          (batteryLevel) => completer.complete(batteryLevel),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (batteryLevel) => completer.complete(batteryLevel),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -328,10 +317,9 @@ class TTLockService {
     TTLock.getLockOperateRecord(
       type,
       _lockData!,
-          (records) => completer.complete(records),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (records) => completer.complete(records),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -343,10 +331,9 @@ class TTLockService {
 
     TTLock.getLockSystemInfo(
       _lockData!,
-          (systemModel) => completer.complete(systemModel),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (systemModel) => completer.complete(systemModel),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -358,10 +345,9 @@ class TTLockService {
 
     TTLock.getLockAutomaticLockingPeriodicTime(
       _lockData!,
-          (currentTime, minTime, maxTime) => completer.complete(currentTime),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (currentTime, minTime, maxTime) => completer.complete(currentTime),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -374,10 +360,9 @@ class TTLockService {
     TTLock.setLockAutomaticLockingPeriodicTime(
       seconds,
       _lockData!,
-          () => completer.complete(),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      () => completer.complete(),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -390,18 +375,16 @@ class TTLockService {
 
     TTLock.scanWifi(
       _lockData!,
-          (finished, wifiList) {
+      (finished, wifiList) {
         allNetworks.addAll(wifiList);
         if (finished) {
-          completer.complete(WifiScanResult(
-            networks: allNetworks,
-            isComplete: true,
-          ));
+          completer.complete(
+            WifiScanResult(networks: allNetworks, isComplete: true),
+          );
         }
       },
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -418,10 +401,9 @@ class TTLockService {
       ssid,
       password,
       _lockData!,
-          () => completer.complete(),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      () => completer.complete(),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -433,10 +415,9 @@ class TTLockService {
 
     TTLock.getWifiInfo(
       _lockData!,
-          (wifiInfo) => completer.complete(wifiInfo),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (wifiInfo) => completer.complete(wifiInfo),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -448,10 +429,9 @@ class TTLockService {
 
     TTLock.getLockRemoteUnlockSwitchState(
       _lockData!,
-          (isEnabled) => completer.complete(isEnabled),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (isEnabled) => completer.complete(isEnabled),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -464,13 +444,12 @@ class TTLockService {
     TTLock.setLockRemoteUnlockSwitchState(
       enable,
       _lockData!,
-          (lockData) {
+      (lockData) {
         _lockData = lockData;
         completer.complete(lockData);
       },
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -482,10 +461,9 @@ class TTLockService {
 
     TTLock.getLockSoundWithSoundVolume(
       _lockData!,
-          (volume) => completer.complete(volume),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (volume) => completer.complete(volume),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -498,10 +476,9 @@ class TTLockService {
     TTLock.setLockSoundWithSoundVolume(
       volume,
       _lockData!,
-          () => completer.complete(),
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      () => completer.complete(),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -513,13 +490,12 @@ class TTLockService {
 
     TTLock.resetEkey(
       _lockData!,
-          (newLockData) {
+      (newLockData) {
         _lockData = newLockData;
         completer.complete(newLockData);
       },
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -531,13 +507,12 @@ class TTLockService {
 
     TTLock.resetLock(
       _lockData!,
-          () {
+      () {
         _clearLocalData();
         completer.complete();
       },
-          (errorCode, errorMsg) => completer.completeError(
-        TTLockException(errorCode, errorMsg),
-      ),
+      (errorCode, errorMsg) =>
+          completer.completeError(TTLockException(errorCode, errorMsg)),
     );
 
     return completer.future;
@@ -555,7 +530,7 @@ class TTLockService {
     return String.fromCharCodes(
       Iterable.generate(
         length,
-            (_) => digits.codeUnitAt(random.nextInt(digits.length)),
+        (_) => digits.codeUnitAt(random.nextInt(digits.length)),
       ),
     );
   }
@@ -575,7 +550,38 @@ class TTLockService {
   }
 
   void clearLockData() => _clearLocalData();
+
+  void lockUpgrade({required String firmwarePackage}) {
+    if (_lockMac != null && _lockData != null) {
+      TtlockUpgrade.startUpgradeLock(
+        _lockMac!,
+        _lockData!,
+        firmwarePackage,
+        (status, progress) {},
+        (String newLockData) {},
+        (errorCode, errorMsg) {},
+      );
+    }
+  }
+  void gatewayUpgrade({
+  required TTDfuType dfuType,
+ required String clientId,
+ required String accessToken,
+ required int gatewayId,
+ required String gatewayMac,
+ required TTUpgradeProgressCallback progressCallback,
+ required TTSuccessCallback successCallback,
+ required TTUpgradeFailedCallback failedCallback}) {
+    TtlockUpgrade.startUpgradeGateway(dfuType,  clientId, accessToken, gatewayId, gatewayMac, (status, progress) {
+
+    }, () {
+      print("upgrade success");
+    }, (errorCode, errorMsg) { }
+
+
+    ) ;
+
+  }
+
+
 }
-
-
-
