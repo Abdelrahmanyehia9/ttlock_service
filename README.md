@@ -1,39 +1,88 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# ttlock_service
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A Flutter package for seamless integration with TTLock smart lock systems. This package provides a high-level API to control TTLock devices, enabling features like lock scanning, passcode management, unlocking/locking, WiFi configuration, and firmware upgrades. It simplifies interactions with TTLock hardware, making it ideal for IoT, home automation, or hospitality apps.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- **Lock Scanning**: Discover nearby TTLock devices via a stream-based API.
+- **Lock Initialization**: Initialize locks with MAC address and version details.
+- **Passcode Management**:
+  - Generate one-time or scheduled passcodes with customizable validity.
+  - Create, update, delete, or retrieve passcodes.
+  - Reset all passcodes or manage admin passcodes.
+- **Lock Control**: Unlock or lock devices with battery and timestamp feedback.
+- **State Queries**: Retrieve lock state, battery level, operation history, system info, and auto-lock settings.
+- **WiFi Integration**: Scan for WiFi networks, configure lock WiFi, and retrieve WiFi info.
+- **Remote Features**: Enable/disable remote unlock and adjust lock sound volume.
+- **Reset Operations**: Reset eKeys or the entire lock.
+- **Firmware Upgrades**: Support for lock and gateway firmware updates.
+- **Robust Error Handling**: Custom exceptions with TTLock-specific error codes.
 
-## Getting started
+## Getting Started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+iOS: 
+1. In XCode,Add Key`Privacy - Bluetooth Peripheral Usage Description` Value `your description for bluetooth` to your project's `info` ➜ `Custom iOS Target Projectes`
 
-## Usage
+Android:
+AndroidManifest.xml configuration:
+1. add 'xmlns:tools="http://schemas.android.com/tools"' to <manifest> element
+2. add 'tools:replace="android:label"' to <application> element
+3. additional permissions:
+```  
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+<uses-permission android:name="android.permission.BLUETOOTH" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+```
+4. in MainActivity extends FlutterActivity, you need add permissions result to ttlock plugin. 
+       
+first add import
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```
+import com.ttlock.ttlock_flutter.TtlockFlutterPlugin
 ```
 
-## Additional information
+second add below callback code:   
+java code:
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```
+@Override
+public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        TtlockFlutterPlugin ttlockflutterpluginPlugin = (TtlockFlutterPlugin) getFlutterEngine().getPlugins().get(TtlockFlutterPlugin.class);
+        if (ttlockflutterpluginPlugin != null) {
+            ttlockflutterpluginPlugin.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+```
+kotlin code:
+```
+override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        val ttlockflutterpluginPlugin = flutterEngine!!.plugins[TtlockFlutterPlugin::class.java] as TtlockFlutterPlugin?
+        ttlockflutterpluginPlugin?.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+```
+
+5.you need config buildTypes in build.gradle file.like this:
+
+```
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+### Prerequisites
+- Flutter SDK: `>=1.17.0`
+- Dart SDK: `^3.9.2`
+
+
+### Installation
+
+Add the package to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  ttlock_service:
+    git:
+      url: https://github.com/Abdelrahmanyehia9/ttlock_service.git
