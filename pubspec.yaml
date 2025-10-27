@@ -1,7 +1,8 @@
 name: ttlock_service
-description: "A new Flutter package project."
+description: A Flutter package that handle ttlock.
 version: 0.0.1
-homepage:
+homepage: https://github.com/Abdelrahmanyehia9/ttlock_service
+
 
 environment:
   sdk: ^3.9.2
