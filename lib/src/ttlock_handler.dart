@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:ttlock_flutter/ttlock.dart';
-import 'package:ttlock_upgrade_flutter/ttlock_upgrade.dart' hide TTSuccessCallback;
-
 import 'models/lock_controll_result.dart';
 import 'models/ttlock_exception.dart';
 import 'models/wifi_scan_result.dart';
@@ -551,37 +549,10 @@ class TTLockService {
 
   void clearLockData() => _clearLocalData();
 
-  void lockUpgrade({required String firmwarePackage}) {
-    if (_lockMac != null && _lockData != null) {
-      TtlockUpgrade.startUpgradeLock(
-        _lockMac!,
-        _lockData!,
-        firmwarePackage,
-        (status, progress) {},
-        (String newLockData) {},
-        (errorCode, errorMsg) {},
-      );
-    }
-  }
-  void gatewayUpgrade({
-  required TTDfuType dfuType,
- required String clientId,
- required String accessToken,
- required int gatewayId,
- required String gatewayMac,
- required TTUpgradeProgressCallback progressCallback,
- required TTSuccessCallback successCallback,
- required TTUpgradeFailedCallback failedCallback}) {
-    TtlockUpgrade.startUpgradeGateway(dfuType,  clientId, accessToken, gatewayId, gatewayMac, (status, progress) {
-
-    }, () {
-      print("upgrade success");
-    }, (errorCode, errorMsg) { }
 
 
-    ) ;
 
-  }
+
 
 
 }
